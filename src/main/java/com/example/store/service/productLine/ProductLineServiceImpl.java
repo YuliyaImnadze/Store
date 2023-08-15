@@ -1,21 +1,31 @@
 package com.example.store.service.productLine;
 
+import com.example.store.dto.productLine.ProductLineDtoRequest;
+import com.example.store.dto.productLine.ProductLineDtoResponse;
 import com.example.store.entity.Discount;
 import com.example.store.entity.ProductLine;
 import com.example.store.exception.InsufficientStockException;
+import com.example.store.mapper.ProductLineMapper;
+import com.example.store.repository.ProductLineRepository;
+import com.example.store.service.common.CommonServiceImpl;
 import com.example.store.service.discount.DiscountService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
 @Service
-public class ProductLineServiceImpl  implements ProductLineService { // не могу сделать наследование от общего сервиса из-за маппера
+public class ProductLineServiceImpl  extends CommonServiceImpl<ProductLine, ProductLineDtoRequest, ProductLineDtoResponse,
+        ProductLineRepository,
+        ProductLineMapper>
+        implements ProductLineService { // не могу сделать наследование от общего сервиса из-за маппера
 
     private final DiscountService discountService;
 
-    public ProductLineServiceImpl(DiscountService discountService) {
+    public ProductLineServiceImpl(ProductLineRepository repository, ProductLineMapper mapper, DiscountService discountService) {
+        super(repository, mapper);
         this.discountService = discountService;
     }
+
 
     @Override
     public ProductLine checkQuantityInProductLine(ProductLine productLine) {

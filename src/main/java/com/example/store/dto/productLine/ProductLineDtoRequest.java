@@ -19,7 +19,7 @@ public class ProductLineDtoRequest extends BaseDtoRequest {
 
     private Integer count;
 
-    private UUID companyId;
+//    private UUID companyId;
 
 
 

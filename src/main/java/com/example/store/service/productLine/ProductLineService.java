@@ -8,7 +8,7 @@ import com.example.store.service.common.CommonService;
 
 import java.util.Set;
 
-public interface ProductLineService {// extends CommonService<ProductLine, ProductLineDtoRequest, ProductLineDtoResponse> {
+public interface ProductLineService extends CommonService<ProductLine, ProductLineDtoRequest, ProductLineDtoResponse> {
 
     ProductLine checkQuantityInProductLine(ProductLine productLine);
 
