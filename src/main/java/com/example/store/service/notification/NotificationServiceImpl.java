@@ -1,9 +1,6 @@
 package com.example.store.service.notification;
 
-import com.example.store.dto.notification.NotificationDtoRequest;
-import com.example.store.dto.notification.NotificationDtoResponse;
-import com.example.store.entity.Notification;
-import com.example.store.entity.User;
+import com.example.store.entity.Purchase;
 import com.example.store.exception.EmailSendingException;
 import com.example.store.mapper.NotificationMapper;
 import com.example.store.repository.NotificationRepository;
@@ -31,6 +28,7 @@ public class NotificationServiceImpl extends CommonServiceImpl<Notification, Not
         NotificationMapper>
         implements NotificationService {
 
+    private final JavaMailSender emailSender;
     private final JavaMailSender emailSender; // поменяла с public
     private final UserService userService;
     private final PurchaseRepository purchaseRepository;
