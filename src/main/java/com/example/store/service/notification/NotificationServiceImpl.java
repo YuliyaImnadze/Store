@@ -24,7 +24,7 @@ import java.util.UUID;
 @Service
 public class NotificationServiceImpl implements NotificationService {
 
-    private final JavaMailSender emailSender; // поменяла с public
+    private final JavaMailSender emailSender;
     private final PurchaseRepository purchaseRepository;
     private final PurchaseService purchaseService;
 
