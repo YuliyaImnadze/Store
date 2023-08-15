@@ -1,6 +1,7 @@
 package com.example.store.controller;
 
 import com.example.store.dto.BaseResponse;
+import com.example.store.dto.notification.NotificationDtoRequest;
 import com.example.store.service.notification.NotificationService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,20 @@ public class NotificationController {
     }
 
     @PostMapping(value = "/simple-email")
-    public ResponseEntity<BaseResponse<String>> sendSimpleEmail(@RequestParam("user-email") String email,
-                                                                @RequestParam("subject") String subject,
-                                                                @RequestBody String text) {
-        service.createSimpleEmail(email, subject, text);
+    public ResponseEntity<BaseResponse<String>> sendSimpleEmail(@RequestBody NotificationDtoRequest notificationDtoRequest) {
+        service.createSimpleEmail(notificationDtoRequest);
         BaseResponse<String> response = new BaseResponse<>(HttpStatus.OK, "Please check your inbox");
         return ResponseEntity.ok(response);
     }
+
+//    @PostMapping(value = "/simple-email")
+//    public ResponseEntity<BaseResponse<String>> sendSimpleEmail(@RequestParam("user-email") String email,
+//                                                                @RequestParam("subject") String subject,
+//                                                                @RequestBody String text) {
+//        service.createSimpleEmail(email, subject, text);
+//        BaseResponse<String> response = new BaseResponse<>(HttpStatus.OK, "Please check your inbox");
+//        return ResponseEntity.ok(response);
+//    }
 
 
     @GetMapping(value = "/simple-order-email/{user-email}")

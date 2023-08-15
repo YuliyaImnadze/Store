@@ -15,7 +15,6 @@ public interface ProductLineMapper extends CommonMapper<ProductLine, ProductLine
 
     @Override
     @Mapping(target = "product.id", source = "productId")
-    @Mapping(target = "company.id", source = "companyId")
     ProductLine toEntityFromRequest(ProductLineDtoRequest dto);
 
 

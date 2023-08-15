@@ -22,7 +22,7 @@ public class ProductLine extends BaseEntity { // Покупка + еще одн�
     private BigDecimal totalSum;
 
     // у 1 прод.л. 1 компания, у 1 компании много прод.л
-    @ManyToOne
+    @ManyToOne 
     @JoinColumn(name = "company_id")
     private Company company;
 

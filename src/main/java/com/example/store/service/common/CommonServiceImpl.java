@@ -2,10 +2,7 @@ package com.example.store.service.common;
 
 import com.example.store.dto.base.BaseDtoRequest;
 import com.example.store.dto.base.BaseDtoResponse;
-import com.example.store.dto.discount.DiscountDtoRequest;
-import com.example.store.dto.discount.DiscountDtoResponse;
 import com.example.store.entity.BaseEntity;
-import com.example.store.entity.Discount;
 import com.example.store.mapper.CommonMapper;
 import com.example.store.repository.CommonRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -53,8 +50,8 @@ public class CommonServiceImpl<E extends BaseEntity, D extends BaseDtoRequest, T
     }
 
     @Override
-    public E createWithoutCheck(E entity) {
-        return repository.save(entity);
+    public void createWithoutCheck(E entity) {
+        repository.save(entity);
     }
 
     @Transactional

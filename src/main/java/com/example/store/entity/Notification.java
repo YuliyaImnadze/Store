@@ -2,6 +2,7 @@ package com.example.store.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
@@ -20,7 +21,7 @@ public class Notification extends BaseEntity {
     private String header;
 
     @Column(name = "date")
-    @CreatedDate // проверить
+    @CreationTimestamp
     private LocalDate date;
 
     @Column(name = "text")

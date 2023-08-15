@@ -63,17 +63,21 @@ public class PurchaseServiceImpl extends CommonServiceImpl<Purchase, PurchaseDto
         Set<ProductLineDtoRequest> productList = purchaseDtoRequest.getProductList();
 
         Set<UUID> productsId = productList.stream().map(ProductLineDtoRequest::getProductId).collect(Collectors.toSet());
-        Set<UUID> companiesId = productList.stream().map(ProductLineDtoRequest::getCompanyId).collect(Collectors.toSet());
+    //    Set<UUID> companiesId = productList.stream().map(ProductLineDtoRequest::getCompanyId).collect(Collectors.toSet());
         // получаею данные из базы
         Set<Product> productSet = productService.findProductsByIdsOrThrow(productsId);
         // вот тут стоит переделать. зачем передавать id компании, если можно взять его из продукты
-        Set<Company> companySet = companyService.findCompaniesByIdsOrThrow(companiesId);
+
+        // так, сет компаний не нужен вообще. уже это все есть в продукте
+//        Set<Company> companySet = companyService.findCompaniesByIdsOrThrow(companiesId);
 
         Set<ProductLine> productLineSet = productLineMapper.toEntitySetFromRequest(productList);
         // добавить найденные продукты в базе в ProductLine (чтобы было не только id)
         addFullProductInfoInProductLine(productLineSet, productSet);
+
         // добавить найденные компании в базе в ProductLine (чтобы было не только id)
-        addFullCompanyInfoInProductLine(productLineSet, companySet);
+//        addFullCompanyInfoInProductLine(productLineSet, companySet);
+
         // это проверка на количество
         productLineSet.forEach(productLineService::checkQuantityInProductLine);
         // это список с общей суммой по каждому продукт лайну
