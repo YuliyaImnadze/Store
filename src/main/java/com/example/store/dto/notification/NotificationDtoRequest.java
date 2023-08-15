@@ -16,6 +16,6 @@ public class NotificationDtoRequest extends BaseDtoRequest {
 
     private UUID recipientId;
 
-//    private User sender; не знаю как сделать
+//    private User sender; не знаю как сделать бин в сервисе https://www.baeldung.com/get-user-in-spring-security
 
 }
