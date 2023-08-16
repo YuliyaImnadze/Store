@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DiscountServiceImpl extends CommonServiceImpl<Discount, DiscountDtoRequest, DiscountDtoResponse,
@@ -37,38 +38,24 @@ public class DiscountServiceImpl extends CommonServiceImpl<Discount, DiscountDto
         }
     }
 
+    @Override
     @Transactional
     @Scheduled(cron = "@daily") // (fixedDelay = 10000) //
-    public void updateExpiredDiscounts() { // делать флаг, потом эти флаги не смотреть
-        List<Discount> expiredDiscounts = repository.findByDiscountPeriodLessThan(LocalDate.now());
-        for (Discount discount : expiredDiscounts) {
-            Set<Product> discountedProducts = discount.getDiscountedProducts();
-            for (Product product : discountedProducts) {
-                product.setDiscount(null);
-//                productRepository.create(product);
-                productService.createWithoutCheck(product);
-            }
-            discount.setActive(false);
-            repository.save(discount);
-        }
+    public void updateExpiredDiscounts() {
+        repository.removeExpiredDiscountsFromProducts(LocalDate.now());
+        repository.deactivateExpiredDiscounts(LocalDate.now());
     }
 
-
     @Transactional
-    @Override // подумать - нужно ли пролверять закончился у товара срок предыдущей скидки или нет.
-    // по идее же нужно, чтобы не уменьшить и не увеличить скидку
+    @Override
     public DiscountDtoResponse create(DiscountDtoRequest discountDtoRequest) {
         Discount discount = mapper.toEntityFromRequest(discountDtoRequest);
         Set<Product> discountedProducts = discount.getDiscountedProducts();
-        // ПИСАЛА С ВЕРОЙ, МОЖЕТ БЫТЬ ДИЧЬ
-        // id для проверки
-        // stream
-        Set<UUID> productIdList = new HashSet<>();
-        for (Product product : discountedProducts) {
-            productIdList.add(product.getId());
-        }
+        Set<UUID> productsIds = discountedProducts.stream()
+                .map(Product::getId)
+                .collect(Collectors.toSet());
         // проверить есть такие продукты или нет
-        Set<Product> productSet = productService.findProductsByIdsOrThrow(productIdList);
+        Set<Product> productSet = productService.findProductsByIdsOrThrow(productsIds);
         // проверить истек ли срок прошлой скидки
         for (Product product : productSet) {
             Discount productDiscount = product.getDiscount();

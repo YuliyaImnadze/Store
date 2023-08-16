@@ -8,4 +8,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @ConditionalOnProperty(name = "scheduler.enabled", matchIfMissing = true)
 public class SchedulerConfig {
+
+//    https://habr.com/ru/articles/580062/
+//    https://www.baeldung.com/spring-scheduled-tasks
+//    https://stackoverflow.com/questions/67535773/how-to-retry-scheduled-task-in-spring
+
 }

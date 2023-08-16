@@ -38,7 +38,6 @@ public class UserServiceImpl extends CommonServiceImpl<User, UserDtoRequest, Use
     @Override
     public void addMoneyToSeller(ProductLine productLine) {
         User ownerCompany = productLine.getProduct().getSupplier().getOwner();
-//        User ownerCompany = productLine.getCompany().getOwner();
         BigDecimal totalSum = productLine.getTotalSum();
         ownerCompany.setBalance(ownerCompany.getBalance().add(totalSum));
     }

@@ -24,17 +24,15 @@ public class CompanyController {
     }
 
     @GetMapping
-    public ResponseEntity<BaseResponse<List<CompanyDtoResponse>>> showAll() {
+    public BaseResponse<List<CompanyDtoResponse>> showAll() {
         List<CompanyDtoResponse> companyDtoResponses = service.findAll();
-        BaseResponse<List<CompanyDtoResponse>> baseResponse = new BaseResponse<>(HttpStatus.OK, companyDtoResponses);
-        return ResponseEntity.ok(baseResponse);
+        return new BaseResponse<>(HttpStatus.OK, companyDtoResponses);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<BaseResponse<CompanyDtoResponse>> create(@RequestBody CompanyDtoRequest companyDtoRequest) {
+    public BaseResponse<CompanyDtoResponse> create(@RequestBody CompanyDtoRequest companyDtoRequest) {
         CompanyDtoResponse companyDtoResponse = service.create(companyDtoRequest);
-        BaseResponse<CompanyDtoResponse> baseResponse = new BaseResponse<>(HttpStatus.OK, companyDtoResponse);
-        return ResponseEntity.ok(baseResponse);
+        return new BaseResponse<>(HttpStatus.OK, companyDtoResponse);
     }
 
 }

@@ -1,10 +1,8 @@
 package com.example.store.dto.notification;
 
 import com.example.store.dto.base.BaseDtoRequest;
-import com.example.store.entity.User;
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Data

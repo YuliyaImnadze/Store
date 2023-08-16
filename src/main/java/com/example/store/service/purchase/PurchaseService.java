@@ -14,6 +14,6 @@ public interface PurchaseService extends CommonService<Purchase, PurchaseDtoRequ
 
     PurchaseDtoResponse create(@RequestBody PurchaseDtoRequest purchaseDtoRequest);
 
-    void writePurchaseToFile(UUID purchaseId) throws IOException;
+//    void writePurchaseToFile(UUID purchaseId) throws IOException;
 
 }

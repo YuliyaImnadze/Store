@@ -24,12 +24,13 @@ public class UserController {
         this.service = service;
     }
 
-    @GetMapping
+    @GetMapping // пагинация - page и size
     public ResponseEntity<BaseResponse<List<UserDtoResponse>>> findAll() {
         List<UserDtoResponse> userDtoResponse = service.findAll();
         BaseResponse<List<UserDtoResponse>> response = new BaseResponse<>(HttpStatus.OK, userDtoResponse);
         return ResponseEntity.ok(response);
     }
+    // отдельный метод на вывод общего кол-ва. обязательно использовать распределенные кэш
 
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<UserDtoResponse>> create(@RequestBody UserDtoRequest userDtoRequest) {

@@ -11,6 +11,5 @@ import java.util.UUID;
 
 public interface CompanyService extends CommonService<Company, CompanyDtoRequest, CompanyDtoResponse> {
 
-    Set<Company> findCompaniesByIdsOrThrow(Set<UUID> companyIds);
 
 }

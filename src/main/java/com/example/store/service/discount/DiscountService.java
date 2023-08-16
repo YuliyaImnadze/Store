@@ -12,6 +12,8 @@ public interface DiscountService extends CommonService<Discount, DiscountDtoRequ
 
     void checkDiscountPeriod(Discount discount);
 
+    void updateExpiredDiscounts(); // почему он серый?
+
     DiscountDtoResponse create(DiscountDtoRequest discountDtoRequest);
 
 

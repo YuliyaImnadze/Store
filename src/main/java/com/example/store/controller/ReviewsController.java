@@ -20,7 +20,7 @@ public class ReviewsController {
         this.service = service;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create")  // предпочтительно использовать RequestBody
     public ResponseEntity<BaseResponse<ReviewsDtoResponse>> create(@RequestParam("userId") UUID userId,
                                                                    @RequestParam("productId") UUID productId,
                                                                    @RequestBody ReviewsDtoRequest reviewsDtoRequest) {

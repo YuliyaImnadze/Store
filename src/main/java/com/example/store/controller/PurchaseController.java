@@ -32,18 +32,19 @@ public class PurchaseController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/file")
-    public ResponseEntity<BaseResponse<String>> createFile(@RequestParam("purchaseId")UUID purchaseId) {
-        try {
-            service.writePurchaseToFile(purchaseId);
-            BaseResponse<String> response = new BaseResponse<>(HttpStatus.OK, "Данные о покупке успешно записаны в файл");
-            return ResponseEntity.ok(response);
-        } catch (IOException e) {
-            BaseResponse<String> response = new BaseResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка при записи покупки в файл: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-
-    }
+//    @PostMapping("/file")
+//    public ResponseEntity<BaseResponse<String>> createFile(@RequestParam("purchaseId")UUID purchaseId) {
+//        try {
+//            service.writePurchaseToFile(purchaseId);
+//            BaseResponse<String> response = new BaseResponse<>(HttpStatus.OK, "Данные о покупке успешно записаны в файл");
+//            return ResponseEntity.ok(response);
+//        } catch (IOException e) {
+//            // 400 BAD REQUEST
+//            BaseResponse<String> response = new BaseResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка при записи покупки в файл: " + e.getMessage());
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+//        }
+//
+//    }
 
 
 }

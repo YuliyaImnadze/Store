@@ -15,7 +15,6 @@ public interface NotificationService extends CommonService<Notification, Notific
     void createSimpleEmail(NotificationDtoRequest notificationDtoRequest);
 
     // здесь нужно доделать - тк при отправке не создается сущность
-    void createEmailWithAttachment(String toAddress, String subject, String message, UUID purchaseId)
-            throws IOException, MessagingException;
+    void createEmailWithAttachment(NotificationDtoRequest notificationDtoRequest, UUID purchaseId);
 }
 

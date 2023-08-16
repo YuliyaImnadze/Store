@@ -29,19 +29,4 @@ public class CompanyServiceImpl extends CommonServiceImpl<Company, CompanyDtoReq
     }
 
 
-    @Override
-    public Set<Company> findCompaniesByIdsOrThrow(Set<UUID> companyIds) {
-        Set<Company> companies = repository.findAllByIdIn(companyIds);
-        // проверить по размеру. если меньше, искать
-        if (companies.size() < companyIds.size()) {
-            Set<UUID> foundCompanyIds = companies.stream().map(Company::getId).collect(Collectors.toSet());
-            Set<UUID> missingCompanyIds = new HashSet<>(companyIds);
-            missingCompanyIds.removeAll(foundCompanyIds);
-
-            throw new EntityNotFoundException("Companies with ids: " + missingCompanyIds + " not found");
-        }
-
-        return companies;
-    }
-
 }

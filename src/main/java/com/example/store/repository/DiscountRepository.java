@@ -1,25 +1,23 @@
 package com.example.store.repository;
 
 import com.example.store.entity.Discount;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
 
 @Repository
 public interface DiscountRepository extends CommonRepository<Discount> {
 
-    @Query("SELECT d FROM STORE_DISCOUNT d WHERE d.discountPeriod < ?1 AND d.active = true")
-    List<Discount> findByDiscountPeriodLessThan(LocalDate currentDate);
+    @Modifying
+    @Query("UPDATE STORE_PRODUCT p SET p.discount = null WHERE p.discount.id IN (" +
+            "SELECT d.id FROM STORE_DISCOUNT d WHERE d.discountPeriod < ?1 AND d.active = true)")
+    void removeExpiredDiscountsFromProducts(LocalDate currentDate);
 
-    // переопределить delete (by Id) (All)
-    //
+    @Modifying
+    @Query("UPDATE STORE_DISCOUNT d SET d.active = false WHERE d.discountPeriod < ?1 AND d.active = true")
+    void deactivateExpiredDiscounts(LocalDate currentDate);
 
-    // дописать этот метод и вместо того, что выше. чтобы не удалять - добавить колонку с флагом
-//    @Query("UPDATE STORE_DISCOUNT SET d WHERE d.discountPeriod < ?1")
-//    void updateByDiscountPeriodLessThan(LocalDate currentDate);
 
 }
