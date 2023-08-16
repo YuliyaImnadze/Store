@@ -22,17 +22,15 @@ public class DiscountController {
     }
 
     @PostMapping("/create")
-        public ResponseEntity<BaseResponse<DiscountDtoResponse>> create(@RequestBody DiscountDtoRequest discountDtoRequest) {
+        public BaseResponse<DiscountDtoResponse> create(@RequestBody DiscountDtoRequest discountDtoRequest) {
         DiscountDtoResponse discountDtoResponse = service.create(discountDtoRequest);
-        BaseResponse<DiscountDtoResponse> baseResponse = new BaseResponse<>(HttpStatus.OK, discountDtoResponse);
-        return ResponseEntity.ok(baseResponse);
+        return new BaseResponse<>(HttpStatus.OK, discountDtoResponse);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<BaseResponse<DiscountDtoResponse>> update(@RequestBody DiscountDtoRequest discountDtoRequest) {
+    public BaseResponse<DiscountDtoResponse> update(@RequestBody DiscountDtoRequest discountDtoRequest) {
         DiscountDtoResponse discountDtoResponse = service.update(discountDtoRequest);
-        BaseResponse<DiscountDtoResponse> baseResponse = new BaseResponse<>(HttpStatus.OK, discountDtoResponse);
-        return ResponseEntity.ok(baseResponse);
+        return new BaseResponse<>(HttpStatus.OK, discountDtoResponse);
     }
 
 

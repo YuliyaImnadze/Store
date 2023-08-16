@@ -25,25 +25,22 @@ public class UserController {
     }
 
     @GetMapping // пагинация - page и size
-    public ResponseEntity<BaseResponse<List<UserDtoResponse>>> findAll() {
+    public BaseResponse<List<UserDtoResponse>> findAll() {
         List<UserDtoResponse> userDtoResponse = service.findAll();
-        BaseResponse<List<UserDtoResponse>> response = new BaseResponse<>(HttpStatus.OK, userDtoResponse);
-        return ResponseEntity.ok(response);
+        return new BaseResponse<>(HttpStatus.OK, userDtoResponse);
     }
     // отдельный метод на вывод общего кол-ва. обязательно использовать распределенные кэш
 
     @PostMapping("/create")
-    public ResponseEntity<BaseResponse<UserDtoResponse>> create(@RequestBody UserDtoRequest userDtoRequest) {
+    public BaseResponse<UserDtoResponse> create(@RequestBody UserDtoRequest userDtoRequest) {
         UserDtoResponse userDtoResponse = service.create(userDtoRequest);
-        BaseResponse<UserDtoResponse> response = new BaseResponse<>(HttpStatus.OK, userDtoResponse);
-        return ResponseEntity.ok(response);
+        return new BaseResponse<>(HttpStatus.OK, userDtoResponse);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<BaseResponse<UserDtoResponse>> update(@RequestBody UserDtoRequest userDtoRequest) {
+    public BaseResponse<UserDtoResponse> update(@RequestBody UserDtoRequest userDtoRequest) {
         UserDtoResponse userDtoResponse = service.update(userDtoRequest);
-        BaseResponse<UserDtoResponse> response = new BaseResponse<>(HttpStatus.OK, userDtoResponse);
-        return ResponseEntity.ok(response);
+        return new BaseResponse<>(HttpStatus.OK, userDtoResponse);
     }
 
 

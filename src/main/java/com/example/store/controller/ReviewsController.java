@@ -21,12 +21,11 @@ public class ReviewsController {
     }
 
     @PostMapping("/create")  // предпочтительно использовать RequestBody
-    public ResponseEntity<BaseResponse<ReviewsDtoResponse>> create(@RequestParam("userId") UUID userId,
+    public BaseResponse<ReviewsDtoResponse> create(@RequestParam("userId") UUID userId,
                                                                    @RequestParam("productId") UUID productId,
                                                                    @RequestBody ReviewsDtoRequest reviewsDtoRequest) {
         ReviewsDtoResponse reviewsDtoResponse = service.create(userId, productId, reviewsDtoRequest);
-        BaseResponse<ReviewsDtoResponse> response = new BaseResponse<>(HttpStatus.OK, reviewsDtoResponse);
-        return ResponseEntity.ok(response);
+        return new BaseResponse<>(HttpStatus.OK, reviewsDtoResponse);
     }
 
 }

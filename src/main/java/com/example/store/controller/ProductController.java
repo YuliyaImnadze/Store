@@ -21,17 +21,15 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<BaseResponse<ProductDtoResponse>> create(@RequestBody ProductDtoRequest productDtoRequest) {
+    public BaseResponse<ProductDtoResponse> create(@RequestBody ProductDtoRequest productDtoRequest) {
         ProductDtoResponse productDtoResponse = service.create(productDtoRequest);
-        BaseResponse<ProductDtoResponse> response = new BaseResponse<>(HttpStatus.OK, productDtoResponse);
-        return ResponseEntity.ok(response);
+        return new BaseResponse<>(HttpStatus.OK, productDtoResponse);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<BaseResponse<ProductDtoResponse>> update(@RequestBody ProductDtoRequest productDtoRequest) {
+    public BaseResponse<ProductDtoResponse> update(@RequestBody ProductDtoRequest productDtoRequest) {
         ProductDtoResponse productDtoResponse = service.update(productDtoRequest);
-        BaseResponse<ProductDtoResponse> response = new BaseResponse<>(HttpStatus.OK, productDtoResponse);
-        return ResponseEntity.ok(response);
+        return new BaseResponse<>(HttpStatus.OK, productDtoResponse);
     }
 
 

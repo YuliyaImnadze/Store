@@ -25,10 +25,9 @@ public class RoleController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<BaseResponse<RoleDtoResponse>> create(@RequestBody RoleDtoRequest roleDtoRequest) {
+    public BaseResponse<RoleDtoResponse> create(@RequestBody RoleDtoRequest roleDtoRequest) {
         RoleDtoResponse roleDtoResponse = service.create(roleDtoRequest);
-        BaseResponse<RoleDtoResponse> response = new BaseResponse<>(HttpStatus.OK, roleDtoResponse);
-        return ResponseEntity.ok(response);
+        return new BaseResponse<>(HttpStatus.OK, roleDtoResponse);
     }
 
 }
