@@ -9,10 +9,13 @@ import com.example.store.service.common.CommonService;
 import java.util.UUID;
 
 public interface DiscountService extends CommonService<Discount, DiscountDtoRequest, DiscountDtoResponse> {
-
+    /**
+     * подписать методы
+     * @param discount
+     */
     void checkDiscountPeriod(Discount discount);
 
-    void updateExpiredDiscounts(); // почему он серый?
+    void updateExpiredDiscounts();
 
     DiscountDtoResponse create(DiscountDtoRequest discountDtoRequest);
 

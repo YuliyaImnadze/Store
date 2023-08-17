@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 public class ProductLineServiceImpl  extends CommonServiceImpl<ProductLine, ProductLineDtoRequest, ProductLineDtoResponse,
         ProductLineRepository,
         ProductLineMapper>
-        implements ProductLineService { // не могу сделать наследование от общего сервиса из-за маппера
+        implements ProductLineService {
 
     private final DiscountService discountService;
 

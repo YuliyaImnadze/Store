@@ -1,12 +1,20 @@
 package com.example.store.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity(name = "STORE_PRODUCT_LINE")
 @Table(name = "product_line")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductLine extends BaseEntity { // Покупка + еще одна сущность, кот будет содержать лист покупок
     // если сущность будет когда то сериализ, то нужно делать INTEGER и пр
 
@@ -29,58 +37,6 @@ public class ProductLine extends BaseEntity { // Покупка + еще одн�
     @ManyToOne  // (cascade = CascadeType.ALL) проверить с персист
     @JoinColumn(name = "purchase_id")
     private Purchase purchase; // у 1 пролукт лайна может быть только 1 покупка. у 1 пок. много прод.лайнов
-
-    public ProductLine() {
-    }
-
-    public ProductLine(Product product, Integer count, BigDecimal totalSum, Company company, Purchase purchase) {
-        this.product = product;
-        this.count = count;
-        this.totalSum = totalSum;
-        this.company = company;
-        this.purchase = purchase;
-    }
-
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
-    public BigDecimal getTotalSum() {
-        return totalSum;
-    }
-
-    public void setTotalSum(BigDecimal totalSum) {
-        this.totalSum = totalSum;
-    }
-
-    public Company getCompany() {
-        return company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
-    }
-
-    public Purchase getPurchase() {
-        return purchase;
-    }
-
-    public void setPurchase(Purchase purchase) {
-        this.purchase = purchase;
-    }
 
     @Override
     public boolean equals(Object o) {

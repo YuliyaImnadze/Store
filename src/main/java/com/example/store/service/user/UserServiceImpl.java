@@ -34,7 +34,7 @@ public class UserServiceImpl extends CommonServiceImpl<User, UserDtoRequest, Use
 //    }
 
 
-    @Transactional // добавила
+
     @Override
     public void addMoneyToSeller(ProductLine productLine) {
         User ownerCompany = productLine.getProduct().getSupplier().getOwner();

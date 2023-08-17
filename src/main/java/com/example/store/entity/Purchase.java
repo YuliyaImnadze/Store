@@ -17,6 +17,10 @@ import java.util.Set;
 
 @Entity(name = "STORE_PURCHASE")
 @Table(name = "purchase")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Purchase extends BaseEntity {
 
     // по id продукт-лайна можно найти лист продукт лайнов и у листа определить юзера
@@ -35,48 +39,6 @@ public class Purchase extends BaseEntity {
     @Column(name = "created_date")
     @CreationTimestamp // проверить
     private LocalDate createdDate;
-
-    public Purchase() {
-    }
-
-    public Purchase(Set<ProductLine> productList, BigDecimal productListAmount, User buyer, LocalDate createdDate) {
-        this.productList = productList;
-        this.productListAmount = productListAmount;
-        this.buyer = buyer;
-        this.createdDate = createdDate;
-    }
-
-    public Set<ProductLine> getProductList() {
-        return productList;
-    }
-
-    public void setProductList(Set<ProductLine> productList) {
-        this.productList = productList;
-    }
-
-    public BigDecimal getProductListAmount() {
-        return productListAmount;
-    }
-
-    public void setProductListAmount(BigDecimal productListAmount) {
-        this.productListAmount = productListAmount;
-    }
-
-    public User getBuyer() {
-        return buyer;
-    }
-
-    public void setBuyer(User buyer) {
-        this.buyer = buyer;
-    }
-
-    public LocalDate getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDate createdDate) {
-        this.createdDate = createdDate;
-    }
 
     @Override
     public boolean equals(Object o) {

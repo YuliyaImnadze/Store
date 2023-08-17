@@ -9,6 +9,7 @@ import com.example.store.mapper.DiscountMapper;
 import com.example.store.repository.DiscountRepository;
 import com.example.store.service.common.CommonServiceImpl;
 import com.example.store.service.product.ProductService;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +42,8 @@ public class DiscountServiceImpl extends CommonServiceImpl<Discount, DiscountDto
     @Override
     @Transactional
     @Scheduled(cron = "@daily") // (fixedDelay = 10000) //
+//    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
+    @Async
     public void updateExpiredDiscounts() {
         repository.removeExpiredDiscountsFromProducts(LocalDate.now());
         repository.deactivateExpiredDiscounts(LocalDate.now());
@@ -54,9 +57,7 @@ public class DiscountServiceImpl extends CommonServiceImpl<Discount, DiscountDto
         Set<UUID> productsIds = discountedProducts.stream()
                 .map(Product::getId)
                 .collect(Collectors.toSet());
-        // проверить есть такие продукты или нет
         Set<Product> productSet = productService.findProductsByIdsOrThrow(productsIds);
-        // проверить истек ли срок прошлой скидки
         for (Product product : productSet) {
             Discount productDiscount = product.getDiscount();
             if (productDiscount != null &&

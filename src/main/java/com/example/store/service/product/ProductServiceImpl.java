@@ -44,7 +44,6 @@ public class ProductServiceImpl extends CommonServiceImpl<Product, ProductDtoReq
         return products;
     }
 
-    @Transactional // добавила
     @Override
     public void changeQuantityFromProductLine(ProductLine productLine) {
         Product product = productLine.getProduct();

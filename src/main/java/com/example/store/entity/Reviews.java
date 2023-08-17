@@ -5,13 +5,12 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity(name = "STORE_REVIEWS")
 @Table(name = "reviews")
 @Getter
 @Setter
-@ToString
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Reviews extends BaseEntity {
@@ -34,4 +33,16 @@ public class Reviews extends BaseEntity {
     @CreationTimestamp
     private LocalDate createdDate;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Reviews reviews1)) return false;
+        if (!super.equals(o)) return false;
+        return Objects.equals(getReviews(), reviews1.getReviews()) && Objects.equals(getGrade(), reviews1.getGrade()) && Objects.equals(getCreatedDate(), reviews1.getCreatedDate());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getReviews(), getGrade(), getCreatedDate());
+    }
 }

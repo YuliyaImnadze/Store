@@ -6,13 +6,12 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity(name = "STORE_NOTIFICATION")
 @Table(name = "notification")
 @Getter
 @Setter
-@ToString
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Notification extends BaseEntity {
@@ -36,4 +35,17 @@ public class Notification extends BaseEntity {
     @JoinColumn(name = "sender_id") // нужен он вообще или нет? отправка же с email магазина
     private User sender;
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Notification that)) return false;
+        if (!super.equals(o)) return false;
+        return Objects.equals(getHeader(), that.getHeader()) && Objects.equals(getDate(), that.getDate()) && Objects.equals(getText(), that.getText());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getHeader(), getDate(), getText());
+    }
 }

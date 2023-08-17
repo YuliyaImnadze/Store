@@ -53,8 +53,6 @@ public class NotificationServiceImpl extends CommonServiceImpl<Notification, Not
         this.purchaseService = purchaseService;
     }
 
-
-    //    (String toAddress, String subject, String message)
     @Override
     public void createSimpleEmail(NotificationDtoRequest notificationDtoRequest) {
         UUID recipientId = notificationDtoRequest.getRecipientId();
@@ -95,6 +93,7 @@ public class NotificationServiceImpl extends CommonServiceImpl<Notification, Not
             messageHelper.setFrom("testforjava@yandex.ru");
             messageHelper.setSubject(subject);
             messageHelper.setText(message);
+            // TODO убери ссылку, есть переменная выше
             String filePath = "src/main/resources/data/" + attachment;
             FileSystemResource fileSystemResource = new FileSystemResource(filePath);
             messageHelper.addAttachment("Purchase Order", fileSystemResource);
@@ -107,7 +106,6 @@ public class NotificationServiceImpl extends CommonServiceImpl<Notification, Not
         }
     }
 
-    // а в этом случае пустой build -нет. метод этот где должен быть вообще? приватный в NotificationServiceImpl или тут
 
     private void writePurchaseToFile(UUID purchaseId) {
         Purchase purchase = purchaseService.findByIdEntity(purchaseId);
@@ -123,32 +121,6 @@ public class NotificationServiceImpl extends CommonServiceImpl<Notification, Not
         }
     }
 
-//    public void createEmailWithAttachment(String toAddress, String subject, String message, UUID purchaseId)
-//            throws IOException {
-//        purchaseRepository.findById(purchaseId)
-//                .orElseThrow(() -> new EntityNotFoundException("Purchase not found"));
-//
-//        purchaseService.writePurchaseToFile(purchaseId);
-//        String attachment = purchaseId + ".json";
-//
-//        MimeMessage mimeMessage = emailSender.createMimeMessage();
-//        MimeMessageHelper messageHelper = null;
-//        try {
-//            messageHelper = new MimeMessageHelper(mimeMessage, true);
-//            messageHelper.setTo(toAddress);
-//            messageHelper.setFrom("testforjava@yandex.ru");
-//            messageHelper.setSubject(subject);
-//            messageHelper.setText(message);
-//            String filePath = "src/main/resources/data/" + attachment;
-//            FileSystemResource fileSystemResource = new FileSystemResource(filePath);
-//            messageHelper.addAttachment("Purchase Order", fileSystemResource);
-//
-//            emailSender.send(mimeMessage);
-//
-//        } catch (MessagingException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 
 
 }

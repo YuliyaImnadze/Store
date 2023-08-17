@@ -1,12 +1,12 @@
 package com.example.store.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Future;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.proxy.HibernateProxy;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "STORE_DISCOUNT")
@@ -14,7 +14,6 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Discount extends BaseEntity {
@@ -36,5 +35,16 @@ public class Discount extends BaseEntity {
     @Column(name = "active")
     private Boolean active = Boolean.TRUE;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Discount discount1)) return false;
+        if (!super.equals(o)) return false;
+        return Objects.equals(getDiscountedProducts(), discount1.getDiscountedProducts()) && Objects.equals(getDiscount(), discount1.getDiscount()) && Objects.equals(getDiscountPeriod(), discount1.getDiscountPeriod()) && Objects.equals(getCreatedDate(), discount1.getCreatedDate()) && Objects.equals(getActive(), discount1.getActive());
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getDiscountedProducts(), getDiscount(), getDiscountPeriod(), getCreatedDate(), getActive());
+    }
 }
