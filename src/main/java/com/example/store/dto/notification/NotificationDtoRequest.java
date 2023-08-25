@@ -2,9 +2,11 @@ package com.example.store.dto.notification;
 
 import com.example.store.dto.base.BaseDtoRequest;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class NotificationDtoRequest extends BaseDtoRequest {
 

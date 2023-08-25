@@ -4,6 +4,7 @@ import com.example.store.dto.notification.NotificationDtoRequest;
 import com.example.store.dto.notification.NotificationDtoResponse;
 import com.example.store.entity.Notification;
 import com.example.store.service.common.CommonService;
+import org.springframework.context.annotation.Profile;
 
 import java.util.UUID;
 

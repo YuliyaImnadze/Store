@@ -6,6 +6,8 @@ import com.example.store.entity.BaseEntity;
 import com.example.store.mapper.CommonMapper;
 import com.example.store.repository.CommonRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -30,7 +32,7 @@ public class CommonServiceImpl<E extends BaseEntity, D extends BaseDtoRequest, T
     }
 
     @Override
-    public T findById(UUID id)  {
+    public T findById(UUID id) {
         E baseEntityById = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Entity not found"));
         return mapper.toDtoResponseFromEntity(baseEntityById);
@@ -44,12 +46,13 @@ public class CommonServiceImpl<E extends BaseEntity, D extends BaseDtoRequest, T
 
     @Transactional
     @Override
-    public T create(D entity)  {
+    public T create(D entity) {
         E savedEntity = repository.save(mapper.toEntityFromRequest(entity));
         return mapper.toDtoResponseFromEntity(savedEntity);
     }
 
     @Override
+    @Transactional
     public void createWithoutCheck(E entity) {
         repository.save(entity);
     }
@@ -59,7 +62,7 @@ public class CommonServiceImpl<E extends BaseEntity, D extends BaseDtoRequest, T
     public T update(D entity) {
         E updatedEntity = repository.findById(entity.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Entity not found"));
-        mapper.partialUpdateRequest(updatedEntity,entity);
+        mapper.partialUpdateRequest(updatedEntity, entity);
         E savedEntity = repository.save(updatedEntity);
         return mapper.toDtoResponseFromEntity(savedEntity);
     }

@@ -42,5 +42,10 @@ public class ExceptionApiHandler extends ResponseEntityExceptionHandler {
         return new BaseResponse<>(HttpStatus.NOT_FOUND, exception.getMessage());
     }
 
+    @ExceptionHandler(PageSizeExceedsLimitException.class)
+    public BaseResponse<String> pageSizeLimitException(PageSizeExceedsLimitException exception) {
+        return new BaseResponse<>(HttpStatus.NOT_FOUND, exception.getMessage());
+    }
+
 
 }

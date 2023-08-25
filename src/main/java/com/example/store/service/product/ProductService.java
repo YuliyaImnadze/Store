@@ -15,11 +15,11 @@ public interface ProductService extends CommonService<Product, ProductDtoRequest
     void changeQuantityFromProductLine(ProductLine productLine);
 
 
+}
+
 
 //    Получение информации о товаре
 //    Добавление и изменение информации о товаре
 //    Добавление и удаление скидок
 //    Добавление отзывов
 //    Добавление оценок
-
-}

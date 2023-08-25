@@ -5,6 +5,8 @@ import com.example.store.dto.user.UserDtoResponse;
 import com.example.store.entity.ProductLine;
 import com.example.store.entity.User;
 import com.example.store.service.common.CommonService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.UUID;
 
@@ -12,6 +14,10 @@ import java.util.UUID;
 public interface UserService extends CommonService<User, UserDtoRequest, UserDtoResponse> {
 
 //    UserDtoResponse create(UserDtoRequest userDtoRequest); // пока не удаляю. дальше все равно буду переопределять, чтобы пароль захэш
+
+    Page<UserDtoResponse> findAll(Pageable pageable);
+
+    Long totalCount();
 
     void addMoneyToSeller(ProductLine productLine);
 

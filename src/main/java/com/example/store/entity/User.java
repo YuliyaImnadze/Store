@@ -31,6 +31,9 @@ public class User extends BaseEntity {
     @JoinColumn(name = "role_id")
     private Role role;  // у одного юзера 1 роль, у одной роли много юзеров
 
+    @Column(name = "active")
+    private Boolean active = Boolean.TRUE;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

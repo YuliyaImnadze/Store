@@ -43,9 +43,9 @@ public class ProductLineServiceImpl  extends CommonServiceImpl<ProductLine, Prod
         Discount discount = productLine.getProduct().getDiscount();
         Integer quantity = productLine.getCount();
         if (discount != null) {
-            discountService.checkDiscountPeriod(discount); // нужно или нет??
+            discountService.checkDiscountPeriod(discount);
             BigDecimal totalAmount = price.multiply(BigDecimal.valueOf(quantity));
-            // это нормально, что я просто на 100 делю? или как то нужно указать %? в сущности хранить в %
+            // переписать % в сущность
             BigDecimal discountAmount = totalAmount.multiply(BigDecimal.valueOf(discount.getDiscount() / 100.0));
             totalAmount = totalAmount.subtract(discountAmount);
             productLine.setTotalSum(totalAmount);

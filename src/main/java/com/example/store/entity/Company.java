@@ -33,6 +33,9 @@ public class Company extends BaseEntity {
     @JoinColumn(name = "owner_id") // у одного юзера может быть много компаний. у 1 комп может быть только 1 юзер
     private User owner;
 
+    @Column(name = "active")
+    private Boolean active = Boolean.TRUE;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
