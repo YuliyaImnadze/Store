@@ -14,7 +14,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -24,23 +29,27 @@ import java.util.UUID;
 public class UserServiceImpl extends CommonServiceImpl<User, UserDtoRequest, UserDtoResponse,
         UserRepository,
         UserMapper>
-        implements UserService {
+        implements UserService, UserDetailsService {
 
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository repository, UserMapper mapper,
-                           UserMapper userMapper) {
+                           UserMapper userMapper, PasswordEncoder passwordEncoder) {
         super(repository, mapper);
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
-//    @Override // пока не удаляю. дальше все равно буду переопределять, чтобы пароль захэш
-//    @Transactional
-//    public UserDtoResponse create(UserDtoRequest userDtoRequest) {
-//        User user = mapper.toEntityFromRequest(userDtoRequest);
-//        User saved = repository.save(user);
-//        return mapper.toDtoResponseFromEntity(saved);
-//    }
+    @Override
+    @Transactional
+    public UserDtoResponse create(UserDtoRequest userDtoRequest) {
+        String encode = passwordEncoder.encode(userDtoRequest.getPassword());
+        userDtoRequest.setPassword(encode);
+        User user = mapper.toEntityFromRequest(userDtoRequest);
+        User saved = repository.save(user);
+        return mapper.toDtoResponseFromEntity(saved);
+    }
 
 
     @Override
@@ -55,7 +64,7 @@ public class UserServiceImpl extends CommonServiceImpl<User, UserDtoRequest, Use
         if (pageNumber > totalPages) {
             throw new PageSizeExceedsLimitException("Invalid page number.There are only " + totalPages + " pages in the table");
         }
-            return users.map(userMapper::toDtoResponseFromEntity);
+        return users.map(userMapper::toDtoResponseFromEntity);
     }
 
     @Override
@@ -77,5 +86,18 @@ public class UserServiceImpl extends CommonServiceImpl<User, UserDtoRequest, Use
         return repository.existsProductIdByUserId(buyerId, productId);
     }
 
+
+    @Transactional
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = repository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getEmail())
+                .password(user.getPassword())
+                .roles(user.getRole().getTitle())
+                .build();
+    }
 
 }

@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/store/product")
 public class ProductController {
@@ -18,6 +20,12 @@ public class ProductController {
     @Autowired
     public ProductController(ProductService service) {
         this.service = service;
+    }
+
+    @GetMapping
+    public BaseResponse<List<ProductDtoResponse>> findAll() {
+        List<ProductDtoResponse> productDtoResponses = service.findAll();
+        return new BaseResponse<>(HttpStatus.OK, productDtoResponses);
     }
 
     @PostMapping("/create")
