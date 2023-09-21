@@ -8,6 +8,10 @@ import com.example.store.mapper.ProductMapper;
 import com.example.store.repository.ProductRepository;
 import com.example.store.service.common.CommonServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,9 +31,43 @@ public class ProductServiceImpl extends CommonServiceImpl<Product, ProductDtoReq
     }
 
     @Override
+    @Cacheable(value = "ProductService::findAll")
     public List<ProductDtoResponse> findAll() {
         List<Product> productsFromActiveCompanies = repository.findProductsFromActiveCompanies();
         return mapper.toDtoResponseFromEntity(productsFromActiveCompanies);
+    }
+
+    @Override
+    @Cacheable(value = "ProductService::findById", key = "#id")
+    public ProductDtoResponse findById(UUID id) {
+        return super.findById(id);
+    }
+
+    @Override
+    @Caching(cacheable = {
+            @Cacheable(value = "ProductService::findAll"),
+            @Cacheable(value = "ProductService::findById", key = "#entity.id")
+    })
+    public ProductDtoResponse create(ProductDtoRequest entity) {
+        return super.create(entity);
+    }
+
+    @Override
+    @Caching(put = {
+            @CachePut(value = "ProductService::findAll"),
+            @CachePut(value = "ProductService::findById", key = "#entity.id")
+    })
+    public ProductDtoResponse update(ProductDtoRequest entity) {
+        return super.update(entity);
+    }
+
+    @Override
+    @Caching(evict = {
+            @CacheEvict(value = "ProductService::findAll"),
+            @CacheEvict(value = "ProductService::findById", key = "#entity.id")
+    })
+    public void delete(ProductDtoRequest entity) {
+        super.delete(entity);
     }
 
     @Override

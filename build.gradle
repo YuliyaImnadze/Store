@@ -19,14 +19,28 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-security:3.1.2'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:3.1.2'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:2.7.11'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    // https://mvnrepository.com/artifact/io.lettuce/lettuce-core
+    implementation group: 'io.lettuce', name: 'lettuce-core', version: '6.2.6.RELEASE'
+
+    implementation 'org.springframework.integration:spring-integration-core'
+    implementation 'org.springframework.integration:spring-integration-redis'
+
+    implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.15.2'
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
     implementation 'org.flywaydb:flyway-core'
+
+    // https://mvnrepository.com/artifact/net.javacrumbs.shedlock/shedlock-spring
+    implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-spring', version: '5.7.0'
+    implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring:5.7.0"
+
 
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.1.2'

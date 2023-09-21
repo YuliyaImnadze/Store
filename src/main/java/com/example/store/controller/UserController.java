@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,8 @@ public class UserController {
     }
 
     @GetMapping
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     public BaseResponse<List<UserDtoResponse>> findAll() {
         List<UserDtoResponse> userDtoResponse = service.findAll();
         return new BaseResponse<>(HttpStatus.OK, userDtoResponse);

@@ -9,6 +9,10 @@ import com.example.store.mapper.DiscountMapper;
 import com.example.store.repository.DiscountRepository;
 import com.example.store.service.common.CommonServiceImpl;
 import com.example.store.service.product.ProductService;
+import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.integration.support.locks.LockRegistry;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -16,18 +20,27 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class DiscountServiceImpl extends CommonServiceImpl<Discount, DiscountDtoRequest, DiscountDtoResponse,
         DiscountRepository, DiscountMapper>
         implements DiscountService {
 
     private final ProductService productService;
+    private final RedisTemplate<String, String> redisTemplate;
+    private static final String LOCK_KEY = "scheduled-task-lock";
 
-    public DiscountServiceImpl(DiscountRepository repository, DiscountMapper mapper, ProductService productService) {
+    private final LockRegistry lockRegistry;
+
+    public DiscountServiceImpl(DiscountRepository repository, DiscountMapper mapper, ProductService productService, RedisTemplate<String, String> redisTemplate, LockRegistry lockRegistry) {
         super(repository, mapper);
         this.productService = productService;
+        this.redisTemplate = redisTemplate;
+        this.lockRegistry = lockRegistry;
     }
 
 
@@ -39,15 +52,53 @@ public class DiscountServiceImpl extends CommonServiceImpl<Discount, DiscountDto
         }
     }
 
+//    @Override
+//    @Transactional
+//    @Scheduled(fixedDelay = 10000) // (cron = "@daily")
+//    @SchedulerLock(name = "discount_update") // TODO
+////    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
+//    @Async
+//    public void updateExpiredDiscounts() {
+//        if (tryLock()) {
+//            try {
+//                repository.removeExpiredDiscountsFromProducts(LocalDate.now());
+//                repository.deactivateExpiredDiscounts(LocalDate.now());
+//            } finally {
+//                unlock();
+//            }
+//        }
+//    }
+
+
     @Override
     @Transactional
-    @Scheduled(cron = "@daily") // (fixedDelay = 10000) //
-//    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
+    @Scheduled(cron = "@daily") // (fixedDelay = 10000)
     @Async
     public void updateExpiredDiscounts() {
-        repository.removeExpiredDiscountsFromProducts(LocalDate.now());
-        repository.deactivateExpiredDiscounts(LocalDate.now());
+        Lock lock = lockRegistry.obtain("discount-update");
+        try {
+            if (lock.tryLock(5000, TimeUnit.MILLISECONDS)) {
+                repository.removeExpiredDiscountsFromProducts(LocalDate.now());
+                repository.deactivateExpiredDiscounts(LocalDate.now());
+            } else {
+                log.warn("Lock is not available. The task will be retried later.");
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            lock.unlock();
+        }
     }
+
+
+//    @Override
+//    @Transactional
+//    @Scheduled (fixedDelay = 10000) // (cron = "@daily") //
+//    @SchedulerLock(name = "store")
+//    public void updateExpiredDiscounts() {
+//        repository.removeExpiredDiscountsFromProducts(LocalDate.now());
+//        repository.deactivateExpiredDiscounts(LocalDate.now());
+//    }
 
     @Transactional
     @Override
@@ -73,5 +124,12 @@ public class DiscountServiceImpl extends CommonServiceImpl<Discount, DiscountDto
         return mapper.toDtoResponseFromEntity(saved);
     }
 
+    private boolean tryLock() {
+        return Boolean.TRUE.equals(redisTemplate.opsForValue().setIfAbsent(LOCK_KEY, "locked")); // redisTemplate.opsForValue().setIfAbsent(LOCK_KEY, "locked");
+    }
+
+    private void unlock() {
+        redisTemplate.delete(LOCK_KEY);
+    }
 
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,6 +24,7 @@ public class TokenController {
     public TokenController(JwtEncoder encoder) {
         this.encoder = encoder;
     }
+
 
     @PostMapping("/token")
     public String token(Authentication authentication) {
@@ -40,5 +42,4 @@ public class TokenController {
                 .build();
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
-
 }

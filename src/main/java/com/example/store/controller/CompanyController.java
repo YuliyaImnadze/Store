@@ -28,6 +28,7 @@ public class CompanyController {
 
     @GetMapping
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public BaseResponse<List<CompanyDtoResponse>> showAll() {
         List<CompanyDtoResponse> companyDtoResponses = service.findAll();
         return new BaseResponse<>(HttpStatus.OK, companyDtoResponses);

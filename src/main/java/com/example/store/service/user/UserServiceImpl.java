@@ -25,7 +25,6 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
-@CacheConfig(cacheNames = "users")
 public class UserServiceImpl extends CommonServiceImpl<User, UserDtoRequest, UserDtoResponse,
         UserRepository,
         UserMapper>
@@ -68,7 +67,6 @@ public class UserServiceImpl extends CommonServiceImpl<User, UserDtoRequest, Use
     }
 
     @Override
-    @Cacheable // ничего дальше не делала, потому что не знаю как - все переопределять?
     public Long totalCount() {
         return repository.count();
     }

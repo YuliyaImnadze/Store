@@ -19,12 +19,14 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -88,7 +90,15 @@ public class PurchaseServiceImpl extends CommonServiceImpl<Purchase, PurchaseDto
         }
     }
 
-//    @SuppressWarnings("IsPresentCheck")
+    @Override
+    public List<PurchaseDtoResponse> findAllPurchaseByBuyer(Authentication authentication) {
+        String email = authentication.getName();// Tommy это email
+        List<Purchase> purchases = repository.findByBuyer_Email(email);
+        return mapper.toDtoResponseFromEntity(purchases);
+    }
+
+
+    //    @SuppressWarnings("IsPresentCheck")
     private void addFullProductInfoInProductLine(Set<ProductLine> productLineSet, Set<Product> productSet) {
         for (ProductLine productLine : productLineSet) {
             UUID productId = productLine.getProduct().getId();
