@@ -69,7 +69,8 @@ public class CommonServiceImpl<E extends BaseEntity, D extends BaseDtoRequest, T
 
     @Transactional
     @Override
-    public void delete(D entity) {
-        repository.delete(mapper.toEntityFromRequest(entity));
+    public void delete(D entityDtoRequest) {
+        E entity = mapper.toEntityFromRequest(entityDtoRequest);
+        repository.delete(entity);
     }
 }

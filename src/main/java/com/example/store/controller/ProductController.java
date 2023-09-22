@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/store/product")
@@ -28,6 +29,12 @@ public class ProductController {
         return new BaseResponse<>(HttpStatus.OK, productDtoResponses);
     }
 
+    @GetMapping("/")
+    public BaseResponse<ProductDtoResponse> findBuId(@RequestParam("productId") UUID productId) {
+        ProductDtoResponse productDtoResponse = service.findById(productId);
+        return new BaseResponse<>(HttpStatus.OK, productDtoResponse);
+    }
+
     @PostMapping("/create")
     public BaseResponse<ProductDtoResponse> create(@RequestBody ProductDtoRequest productDtoRequest) {
         ProductDtoResponse productDtoResponse = service.create(productDtoRequest);
@@ -38,6 +45,12 @@ public class ProductController {
     public BaseResponse<ProductDtoResponse> update(@RequestBody ProductDtoRequest productDtoRequest) {
         ProductDtoResponse productDtoResponse = service.update(productDtoRequest);
         return new BaseResponse<>(HttpStatus.OK, productDtoResponse);
+    }
+
+    @DeleteMapping("/delete")
+    public BaseResponse<String> delete(@RequestBody ProductDtoRequest productDtoRequest) {
+        service.delete(productDtoRequest);
+        return new BaseResponse<>(HttpStatus.OK, "Product was deleted");
     }
 
 

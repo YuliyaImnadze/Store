@@ -15,6 +15,7 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -31,7 +32,7 @@ public class ProductServiceImpl extends CommonServiceImpl<Product, ProductDtoReq
     }
 
     @Override
-    @Cacheable(value = "ProductService::findAll")
+    @Cacheable(value = "ProductService::all")
     public List<ProductDtoResponse> findAll() {
         List<Product> productsFromActiveCompanies = repository.findProductsFromActiveCompanies();
         return mapper.toDtoResponseFromEntity(productsFromActiveCompanies);
@@ -44,9 +45,11 @@ public class ProductServiceImpl extends CommonServiceImpl<Product, ProductDtoReq
     }
 
     @Override
-    @Caching(cacheable = {
-            @Cacheable(value = "ProductService::findAll"),
-            @Cacheable(value = "ProductService::findById", key = "#entity.id")
+    @Caching(put = {
+            @CachePut(value = "ProductService::findById", key = "#result.id")
+    },
+    evict = {
+            @CacheEvict(value = "ProductService::all", allEntries = true),
     })
     public ProductDtoResponse create(ProductDtoRequest entity) {
         return super.create(entity);
@@ -54,17 +57,23 @@ public class ProductServiceImpl extends CommonServiceImpl<Product, ProductDtoReq
 
     @Override
     @Caching(put = {
-            @CachePut(value = "ProductService::findAll"),
             @CachePut(value = "ProductService::findById", key = "#entity.id")
-    })
+    },
+            evict = {
+                    @CacheEvict(value = "ProductService::all", allEntries = true),
+            })
     public ProductDtoResponse update(ProductDtoRequest entity) {
-        return super.update(entity);
+        Product updatedEntity =  repository.findById(entity.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Entity not found"));
+        mapper.partialUpdateRequest(updatedEntity, entity);
+        Product savedEntity = repository.save(updatedEntity);
+        return mapper.toDtoResponseFromEntity(savedEntity);
     }
 
     @Override
     @Caching(evict = {
-            @CacheEvict(value = "ProductService::findAll"),
-            @CacheEvict(value = "ProductService::findById", key = "#entity.id")
+            @CacheEvict(value = "ProductService::all", allEntries = true),
+            @CacheEvict(value = "ProductService::findById", key = "#entity.id", allEntries = true)
     })
     public void delete(ProductDtoRequest entity) {
         super.delete(entity);

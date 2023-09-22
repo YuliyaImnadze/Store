@@ -40,4 +40,16 @@ public class CompanyController {
         return new BaseResponse<>(HttpStatus.OK, companyDtoResponse);
     }
 
+    @PutMapping("/update")
+    public BaseResponse<CompanyDtoResponse> update(@RequestBody CompanyDtoRequest companyDtoRequest) {
+        CompanyDtoResponse companyDtoResponse = service.update(companyDtoRequest);
+        return new BaseResponse<>(HttpStatus.OK, companyDtoResponse);
+    }
+
+    @DeleteMapping("/delete")
+    public BaseResponse<String> delete(@RequestBody CompanyDtoRequest companyDtoRequest) {
+        service.delete(companyDtoRequest);
+        return new BaseResponse<>(HttpStatus.OK, "Company was deleted");
+    }
+
 }
