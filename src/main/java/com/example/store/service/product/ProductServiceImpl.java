@@ -63,11 +63,7 @@ public class ProductServiceImpl extends CommonServiceImpl<Product, ProductDtoReq
                     @CacheEvict(value = "ProductService::all", allEntries = true),
             })
     public ProductDtoResponse update(ProductDtoRequest entity) {
-        Product updatedEntity =  repository.findById(entity.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Entity not found"));
-        mapper.partialUpdateRequest(updatedEntity, entity);
-        Product savedEntity = repository.save(updatedEntity);
-        return mapper.toDtoResponseFromEntity(savedEntity);
+        return super.create(entity);
     }
 
     @Override
