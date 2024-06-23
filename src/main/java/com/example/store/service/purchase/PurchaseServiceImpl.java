@@ -8,23 +8,14 @@ import com.example.store.exception.InsufficientFundsException;
 import com.example.store.mapper.ProductLineMapper;
 import com.example.store.mapper.PurchaseMapper;
 import com.example.store.repository.PurchaseRepository;
-import com.example.store.repository.UserRepository;
 import com.example.store.service.common.CommonServiceImpl;
-import com.example.store.service.company.CompanyService;
 import com.example.store.service.product.ProductService;
 import com.example.store.service.productLine.ProductLineService;
 import com.example.store.service.user.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
@@ -93,7 +84,7 @@ public class PurchaseServiceImpl extends CommonServiceImpl<Purchase, PurchaseDto
     @Override
     public List<PurchaseDtoResponse> findAllPurchaseByBuyer(Authentication authentication) {
         String email = authentication.getName();// Tommy это email
-        List<Purchase> purchases = repository.findByBuyer_Email(email);
+        List<Purchase> purchases = repository.findByBuyerByEmail(email);
         return mapper.toDtoResponseFromEntity(purchases);
     }
 

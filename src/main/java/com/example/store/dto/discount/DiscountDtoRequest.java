@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 public class DiscountDtoRequest extends BaseDtoRequest {
 
-    private List<ProductDtoRequest> discountedProducts; // сделать как то передачу только id
+    private List<ProductDtoRequest> discountedProducts;
 
     private Double discount;
 

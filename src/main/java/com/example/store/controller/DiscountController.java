@@ -6,7 +6,6 @@ import com.example.store.dto.discount.DiscountDtoResponse;
 import com.example.store.service.discount.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 

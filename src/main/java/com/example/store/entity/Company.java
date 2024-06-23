@@ -3,7 +3,8 @@ package com.example.store.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +15,8 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Company extends BaseEntity {
 
     @Column(name = "name", nullable = false)

@@ -1,17 +1,18 @@
 package com.example.store.repository;
 
-import com.example.store.dto.purchase.PurchaseDtoRequest;
 import com.example.store.entity.Purchase;
-import org.springframework.data.jpa.repository.JpaRepository;
+import io.lettuce.core.dynamic.annotation.Param;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.UUID;
 
 @Repository
 public interface PurchaseRepository extends CommonRepository<Purchase> {
 
-    List<Purchase> findByBuyer_Email(String email);
+    @Query("select p from STORE_PURCHASE p where p.buyer.id in " +
+            "(select u.id from STORE_USER u where u.email = :email)")
+    List<Purchase> findByBuyerByEmail(@Param("email") String email);
 
 
 

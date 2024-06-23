@@ -6,7 +6,6 @@ import com.example.store.dto.product.ProductDtoResponse;
 import com.example.store.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +28,7 @@ public class ProductController {
         return new BaseResponse<>(HttpStatus.OK, productDtoResponses);
     }
 
-    @GetMapping("/")
+    @GetMapping("/findById")
     public BaseResponse<ProductDtoResponse> findBuId(@RequestParam("productId") UUID productId) {
         ProductDtoResponse productDtoResponse = service.findById(productId);
         return new BaseResponse<>(HttpStatus.OK, productDtoResponse);

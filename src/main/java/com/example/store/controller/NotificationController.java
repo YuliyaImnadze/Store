@@ -3,14 +3,10 @@ package com.example.store.controller;
 import com.example.store.dto.BaseResponse;
 import com.example.store.dto.notification.NotificationDtoRequest;
 import com.example.store.service.notification.NotificationService;
-import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.UUID;
 
 @RestController

@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 public class DiscountDtoResponse extends BaseDtoResponse {
 
-    private List<Product> discountedProducts; // здесь только id
+    private List<Product> discountedProducts; // todo поменять потом на List<UUID> + request
 
     private Double discount;
 

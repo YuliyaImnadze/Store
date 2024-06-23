@@ -15,7 +15,6 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -32,6 +31,17 @@ public class ProductServiceImpl extends CommonServiceImpl<Product, ProductDtoReq
     }
 
     @Override
+    @Caching(put = {
+            @CachePut(value = "ProductService::findById", key = "#result.id")
+    },
+            evict = {
+                    @CacheEvict(value = "ProductService::all", allEntries = true),
+            })
+    public void createWithoutCheck(Product entity) {
+        super.createWithoutCheck(entity);
+    }
+
+    @Override
     @Cacheable(value = "ProductService::all")
     public List<ProductDtoResponse> findAll() {
         List<Product> productsFromActiveCompanies = repository.findProductsFromActiveCompanies();
@@ -39,7 +49,7 @@ public class ProductServiceImpl extends CommonServiceImpl<Product, ProductDtoReq
     }
 
     @Override
-    @Cacheable(value = "ProductService::findById", key = "#id")
+    @Cacheable(value = "ProductService::findById", key = "#id", cacheManager = "cacheManager")
     public ProductDtoResponse findById(UUID id) {
         return super.findById(id);
     }

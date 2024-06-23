@@ -3,13 +3,12 @@ package com.example.store.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
-@Entity(name = "STORE_PRODUCT")
+@Entity (name = "STORE_PRODUCT")
 @Table(name = "product")
 @Getter
 @Setter

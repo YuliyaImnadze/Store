@@ -3,17 +3,13 @@ package com.example.store.controller;
 import com.example.store.dto.BaseResponse;
 import com.example.store.dto.purchase.PurchaseDtoRequest;
 import com.example.store.dto.purchase.PurchaseDtoResponse;
-import com.example.store.entity.Purchase;
 import com.example.store.service.purchase.PurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 
 @RestController

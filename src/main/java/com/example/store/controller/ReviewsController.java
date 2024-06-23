@@ -5,7 +5,6 @@ import com.example.store.dto.reviews.ReviewsDtoRequest;
 import com.example.store.dto.reviews.ReviewsDtoResponse;
 import com.example.store.service.reviews.ReviewsService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -20,7 +19,7 @@ public class ReviewsController {
         this.service = service;
     }
 
-    @PostMapping("/create")  // предпочтительно использовать RequestBody
+    @PostMapping("/create")
     public BaseResponse<ReviewsDtoResponse> create(@RequestParam("userId") UUID userId,
                                                                    @RequestParam("productId") UUID productId,
                                                                    @RequestBody ReviewsDtoRequest reviewsDtoRequest) {

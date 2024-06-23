@@ -10,7 +10,6 @@ import com.example.store.repository.DiscountRepository;
 import com.example.store.service.common.CommonServiceImpl;
 import com.example.store.service.product.ProductService;
 import lombok.extern.slf4j.Slf4j;
-import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.integration.support.locks.LockRegistry;
 import org.springframework.scheduling.annotation.Async;
@@ -91,15 +90,6 @@ public class DiscountServiceImpl extends CommonServiceImpl<Discount, DiscountDto
     }
 
 
-//    @Override
-//    @Transactional
-//    @Scheduled (fixedDelay = 10000) // (cron = "@daily") //
-//    @SchedulerLock(name = "store")
-//    public void updateExpiredDiscounts() {
-//        repository.removeExpiredDiscountsFromProducts(LocalDate.now());
-//        repository.deactivateExpiredDiscounts(LocalDate.now());
-//    }
-
     @Transactional
     @Override
     public DiscountDtoResponse create(DiscountDtoRequest discountDtoRequest) {
@@ -119,8 +109,7 @@ public class DiscountServiceImpl extends CommonServiceImpl<Discount, DiscountDto
             }
         }
         Discount saved = repository.save(discount);
-        productSet.forEach(product -> product.setDiscount(saved)); // почему не сохраняется автоматически?? из-за связи
-// entityGrath
+        productSet.forEach(product -> product.setDiscount(saved));
         return mapper.toDtoResponseFromEntity(saved);
     }
 

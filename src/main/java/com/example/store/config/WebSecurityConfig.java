@@ -11,14 +11,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.config.ldap.LdapBindAuthenticationManagerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.*;
@@ -43,25 +40,25 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable) //   http.csrf((csrf) -> csrf.disable())
-                .authorizeHttpRequests((requests) -> requests // antMatchers - когда
-//                                .requestMatchers(HttpMethod.POST, "/store/user/create").permitAll() // регистрация пользователя
-//                                .requestMatchers(HttpMethod.POST, "/token").authenticated() //authenticated()
-//                                .requestMatchers(HttpMethod.POST, "/store/product/create").hasAuthority("ADMIN") // hasAuthority - не понятно почему не hasRole
-//                                .requestMatchers(HttpMethod.GET, "/store/company").hasRole("ADMIN") //.hasRole("ADMIN")
-//                                .requestMatchers(HttpMethod.GET, "/store/user").hasAuthority("ROLE_ADMIN")
-//                                .anyRequest().authenticated()
-                                .anyRequest().permitAll()
+                .authorizeHttpRequests((requests) -> requests
+                                .requestMatchers(HttpMethod.POST, "/store/user/create").permitAll() // регистрация пользователя
+                                .requestMatchers(HttpMethod.POST, "/token").authenticated() //authenticated()
+                                .requestMatchers(HttpMethod.POST, "/store/product/create").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/store/company").hasRole("ADMIN") //.hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/store/user").hasAuthority("ROLE_ADMIN")
+                                .anyRequest().authenticated()
+//                                .anyRequest().permitAll()
                 )
                 .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer((oauth2) -> {
-                    log.info("JWT Resource Server configuration is being applied."); // не доходит
+                    log.info("JWT Resource Server configuration is being applied.");
                     oauth2.jwt(Customizer.withDefaults());
                 })
-//                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
-//                .oauth2ResourceServer(oauth2 -> oauth2
-//                        .jwt(customizer -> customizer
-//                                .decoder(jwtDecoder())
-//                        ))
+                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(customizer -> customizer
+                                .decoder(jwtDecoder())
+                        ))
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling((exceptions) -> exceptions
                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
