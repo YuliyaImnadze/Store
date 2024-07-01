@@ -15,9 +15,9 @@ public interface CommonService<E extends BaseEntity, D extends BaseDtoRequest, T
 
     E findByIdEntity(UUID id);
 
-    T create(D entity); // тут тоже вопрос - везде по разному создается. нужен этот метод зедсь вообще??
+    T create(D entity);
 
-    void createWithoutCheck(E entity); // можно так?? таких ситуаций 2 на весь код. надо в этом случае в общий сервис это?
+    void createWithoutCheck(E entity);
 
     T update(D entity);
 
