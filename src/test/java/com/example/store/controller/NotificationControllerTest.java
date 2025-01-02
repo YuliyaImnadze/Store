@@ -1,6 +1,7 @@
 package com.example.store.controller;
 
 
+import com.example.store.config.JwtTokenProvider;
 import com.example.store.dto.notification.NotificationDtoRequest;
 import com.example.store.service.notification.NotificationService;
 import com.example.store.service.notification.NotificationServiceImpl;
@@ -12,7 +13,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,10 +28,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 
 //@Import(NotificationTestConfig.class)
-//@TestPropertySource(locations="classpath:test.properties")
+//@TestPropertySource(locations="classpath:application-test.properties")
 @SpringBootTest
 @AutoConfigureMockMvc
-//@ActiveProfiles("test")
+@ActiveProfiles("test")
 class NotificationControllerTest {
 
     @Autowired
@@ -38,9 +41,16 @@ class NotificationControllerTest {
     @MockBean
     private NotificationService notificationService;
 
+    @Autowired
+    private JwtEncoder jwtEncoder;
+
 
     @Test
     public void testSendSimpleEmail() throws Exception {
+        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(jwtEncoder);
+
+        // Генерируем токен
+        String token = jwtTokenProvider.generateToken("testuser", "ROLE_USER");
         // Prepare request body
         NotificationDtoRequest request = new NotificationDtoRequest();
         request.setRecipientId(UUID.randomUUID());
@@ -53,7 +63,8 @@ class NotificationControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/store/notification/simple-email")
                         .content(asJsonString(request))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         // Verify service interaction

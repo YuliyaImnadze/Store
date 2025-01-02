@@ -6,7 +6,12 @@ services:
     ports:
       - "6379:6379"
       - "8001:8001"
-
-
-
-
+  postgres:
+    image: "postgres:latest"
+    container_name: "postgres-db"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: store_db
+    ports:
+      - "5432:5432"
