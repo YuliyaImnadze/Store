@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: store-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: store-app
+  template:
+    metadata:
+      labels:
+        app: store-app
+    spec:
+      initContainers:
+        - name: wait-for-redis
+          image: busybox:1.31.1
+          command: ['sh', '-c', 'until nc -z redis 6379; do echo "Waiting for Redis..."; sleep 2; done;']
+        - name: wait-for-postgres
+          image: busybox:1.31.1
+          command: ['sh', '-c', 'until nc -z postgres 5432; do echo "Waiting for PostgreSQL..."; sleep 2; done;']
+      containers:
+        - name: store-app
+          image: localhost:5000/store-app:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: REDIS_HOST
+              value: redis
+            - name: POSTGRES_HOST
+              value: postgres
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: Store

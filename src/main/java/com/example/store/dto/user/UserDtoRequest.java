@@ -21,6 +21,4 @@ public class UserDtoRequest extends BaseDtoRequest {
 
     private UUID roleId;
 
-//    private RoleDtoRequest role;  // у 1 юзера много ролей, у 1 роли много юзеров. нужно ли лист юзеров роли?
-
 }
