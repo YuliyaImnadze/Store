@@ -123,11 +123,37 @@ tolerations: []
 
 affinity: {}
 
-env:
-  REDIS_HOST: my-redis-master
-  REDIS_PORT: 6379
-  POSTGRES_HOST: my-postgres-postgresql
-  POSTGRES_PORT: 5432
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: postgres
-  POSTGRES_DB: Store
+appConfig:
+  ports:
+    main: 8080
+  logging:
+    spring: "info"
+    app: "debug"
+    root: "info"
+    config: "classpath:logback.xml"
+  postgres:
+    host: store-app-postgresql
+    port: 5432
+    name: Store
+    user: postgres
+    password: postgres
+  redis:
+    host: store-app-redis-master
+    port: 6379
+
+secrets:
+  enabled: true
+  postgresql:
+    username: postgres
+    password: postgres
+
+postgresql:
+  auth:
+    username: postgres
+    password: postgres
+    database: Store
+
+redis:
+  auth:
+    enabled: false
+

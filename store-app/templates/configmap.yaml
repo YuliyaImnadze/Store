@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "store-app.fullname" . }}-config
+  labels:
+    {{- include "store-app.labels" . | nindent 4 }}
+data:
+  SERVER_PORT: {{ default 8080 .Values.appConfig.ports.main | quote }}
+  LOGGING_LEVEL_SPRING: {{ default "info" .Values.appConfig.logging.spring | quote }}
+  LOGGING_LEVEL_APP: {{ default "debug" .Values.appConfig.logging.app | quote }}
+  LOGGING_LEVEL_ROOT: {{ default "info" .Values.appConfig.logging.root | quote }}
+
+  POSTGRES_HOST: {{ required "The 'appConfig.database.host' parameter is required" .Values.appConfig.postgres.host | quote }}
+  POSTGRES_PORT: {{ default 5432 .Values.appConfig.postgres.port | quote }}
+  POSTGRES_DB: {{ required "The 'appConfig.database.name' parameter is required" .Values.appConfig.postgres.name | quote }}
+  REDIS_HOST: {{ required "The 'appConfig.redis.host' parameter is required" .Values.appConfig.redis.host | quote }}
+  REDIS_PORT: {{ default 6379 .Values.appConfig.redis.port | quote }}

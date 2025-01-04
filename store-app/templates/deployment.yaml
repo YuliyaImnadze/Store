@@ -31,14 +31,14 @@ spec:
           command: [
             'sh',
             '-c',
-            'until nc -z {{ .Values.env.REDIS_HOST }} {{ .Values.env.REDIS_PORT }}; do echo "Waiting for Redis..."; sleep 2; done;'
+            'until nc -z {{ .Values.appConfig.redis.host }} {{ .Values.appConfig.redis.port }}; do echo "Waiting for Redis..."; sleep 2; done;'
           ]
         - name: wait-for-postgres
           image: busybox:1.31.1
           command: [
             'sh',
             '-c',
-            'until nc -z {{ .Values.env.POSTGRES_HOST }} {{ .Values.env.POSTGRES_PORT }}; do echo "Waiting for PostgreSQL..."; sleep 2; done;'
+            'until nc -z {{ .Values.appConfig.postgres.host }} {{ .Values.appConfig.postgres.port }}; do echo "Waiting for PostgreSQL..."; sleep 2; done;'
           ]
       containers:
         - name: {{ .Chart.Name }}
@@ -51,16 +51,46 @@ spec:
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           env:
-            - name: REDIS_HOST
-              value: {{ .Values.env.REDIS_HOST }}
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "store-app.fullname" . }}-config
+                  key: SERVER_PORT
             - name: POSTGRES_HOST
-              value: {{ .Values.env.POSTGRES_HOST }}
-            - name: POSTGRES_USER
-              value: {{ .Values.env.POSTGRES_USER }}
-            - name: POSTGRES_PASSWORD
-              value: {{ .Values.env.POSTGRES_PASSWORD }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "store-app.fullname" . }}-config
+                  key: POSTGRES_HOST
+            - name: POSTGRES_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "store-app.fullname" . }}-config
+                  key: POSTGRES_PORT
             - name: POSTGRES_DB
-              value: {{ .Values.env.POSTGRES_DB }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "store-app.fullname" . }}-config
+                  key: POSTGRES_DB
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "store-app.fullname" . }}-config
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "store-app.fullname" . }}-config
+                  key: REDIS_PORT
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "store-app.fullname" . }}-secret
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "store-app.fullname" . }}-secret
+                  key: POSTGRES_PASSWORD
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
