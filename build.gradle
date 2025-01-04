@@ -41,10 +41,8 @@ dependencies {
     // https://mvnrepository.com/artifact/net.javacrumbs.shedlock/shedlock-spring
     implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-spring', version: '5.7.0'
     implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring:5.7.0"
-
-
-
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.1.2'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.15.2'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.2'

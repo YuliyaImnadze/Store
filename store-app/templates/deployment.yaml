@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "store-app.fullname" . }}
+  labels:
+    {{- include "store-app.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "store-app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "store-app.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: wait-for-redis
+          image: busybox:1.31.1
+          command: [
+            'sh',
+            '-c',
+            'until nc -z {{ .Values.env.REDIS_HOST }} {{ .Values.env.REDIS_PORT }}; do echo "Waiting for Redis..."; sleep 2; done;'
+          ]
+        - name: wait-for-postgres
+          image: busybox:1.31.1
+          command: [
+            'sh',
+            '-c',
+            'until nc -z {{ .Values.env.POSTGRES_HOST }} {{ .Values.env.POSTGRES_PORT }}; do echo "Waiting for PostgreSQL..."; sleep 2; done;'
+          ]
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          env:
+            - name: REDIS_HOST
+              value: {{ .Values.env.REDIS_HOST }}
+            - name: POSTGRES_HOST
+              value: {{ .Values.env.POSTGRES_HOST }}
+            - name: POSTGRES_USER
+              value: {{ .Values.env.POSTGRES_USER }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.env.POSTGRES_PASSWORD }}
+            - name: POSTGRES_DB
+              value: {{ .Values.env.POSTGRES_DB }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+            {{- with .Values.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

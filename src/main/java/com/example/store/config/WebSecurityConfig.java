@@ -42,6 +42,7 @@ public class WebSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable) //   http.csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
                                 .requestMatchers(HttpMethod.POST, "/store/user/create").permitAll() // регистрация пользователя
+                                .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/token").authenticated() //authenticated()
                                 .requestMatchers(HttpMethod.POST, "/store/product/create").hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/store/company").hasRole("ADMIN") //.hasRole("ADMIN")
