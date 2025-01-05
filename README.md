@@ -49,3 +49,8 @@ helm install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-nginx
 
 #### Проверить, что NGINX Ingress Controller установлен
 kubectl get pods -n ingress-nginx
+
+#### Установить Prometheus Operator
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install prometheus-operator prometheus-community/kube-prometheus-stack --namespace default --set prometheus-node-exporter.enabled=false
