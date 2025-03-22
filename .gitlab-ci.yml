@@ -4,10 +4,12 @@ stages:
   - deploy
 
 variables:
-  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+  IMAGE_TAG: store-app:latest
 
 build:
   stage: build
+  tags:
+    - local
   image: gradle:8.4-jdk17
   script:
     - gradle clean build -x test
@@ -17,23 +19,18 @@ build:
 
 docker-build:
   stage: docker
-  image: docker:latest
-  services:
-    - docker:dind
-  before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  tags:
+    - local
   script:
     - docker build -t $IMAGE_TAG .
-    - docker push $IMAGE_TAG
   dependencies:
     - build
 
 deploy:
   stage: deploy
-  image: bitnami/kubectl:latest
+  tags:
+    - local
   script:
-    - echo "$KUBECONFIG_FILE" > kubeconfig.yaml
-    - export KUBECONFIG=$PWD/kubeconfig.yaml
-    - helm upgrade --install store ./store-app --namespace store --create-namespace --set image.repository=$CI_REGISTRY_IMAGE --set image.tag=$CI_COMMIT_SHORT_SHA
+    - helm upgrade --install store ./store-app --namespace store --create-namespace --set image.repository=store-app --set image.tag=latest
   only:
     - master
