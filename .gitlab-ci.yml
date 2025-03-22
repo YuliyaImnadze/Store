@@ -30,7 +30,9 @@ docker-build:
 
 deploy:
   stage: deploy
-  image: lachlanevenson/k8s-helm:latest
+  image:
+    name: lachlanevenson/k8s-helm:latest
+    entrypoint: [""]
   script:
     - helm upgrade --install store ./store-app \
       --namespace store \
