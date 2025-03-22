@@ -9,7 +9,7 @@ variables:
 build:
   stage: build
   tags:
-    - local
+    - docker
   script:
     - docker run --rm -v "$PWD":/app -w /app gradle:8.4-jdk17 gradle clean build -x test
   artifacts:
