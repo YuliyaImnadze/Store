@@ -21,6 +21,9 @@ docker-build:
   stage: docker
   tags:
     - docker
+  image: docker:latest
+  services:
+    - docker:dind
   script:
     - docker build -t $IMAGE_TAG .
   dependencies:
@@ -30,7 +33,11 @@ deploy:
   stage: deploy
   tags:
     - docker
+  image: docker:latest
+  services:
+    - docker:dind
   script:
+    - apk add helm curl
     - helm upgrade --install store ./store-app \
       --namespace store \
       --create-namespace \
