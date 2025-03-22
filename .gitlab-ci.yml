@@ -34,11 +34,12 @@ deploy:
     name: lachlanevenson/k8s-helm:latest
     entrypoint: [""]
   script:
-    - |
-      helm upgrade --install store ./store-app \
-        --namespace store \
-        --create-namespace \
-        --set image.repository=store-app \
-        --set image.tag=latest
+    - export KUBECONFIG=$KUBECONFIG_FILE
+    - helm upgrade --install store ./store-app \
+      --namespace store \
+      --create-namespace \
+      --set image.repository=store-app \
+      --set image.tag=latest
   only:
     - master
+
