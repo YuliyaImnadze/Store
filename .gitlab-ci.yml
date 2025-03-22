@@ -34,7 +34,7 @@ deploy:
   tags:
     - k8s
   image:
-    name: lachlanevenson/k8s-helm:latest
+    name: alpine/k8s:1.27.3
     entrypoint: [""]
   script:
     - |
@@ -47,14 +47,13 @@ deploy:
       # Проверка и создание ServiceMonitor, если его нет
       if ! kubectl get servicemonitor store-app-monitor -n default &>/dev/null; then
         echo "Creating ServiceMonitor..."
-        kubectl apply -f k8s/servicemonitor.yaml
+        kubectl apply -f store-app/templates/servicemonitor.yaml
       else
         echo "ServiceMonitor already exists. Skipping creation."
       fi
   only:
     - master
   when: manual
-
 
 destroy:
   stage: destroy
