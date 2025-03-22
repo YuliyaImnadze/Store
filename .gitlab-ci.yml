@@ -5,44 +5,31 @@ stages:
 
 variables:
   IMAGE_TAG: store-app:latest
-  DOCKER_HOST: tcp://docker:2375
-  DOCKER_TLS_CERTDIR: ""
 
-# Сборка .jar файла через Gradle
 build:
   stage: build
   tags:
-    - docker
-  image: gradle:8.4-jdk17
+    - shell
   script:
     - gradle clean build -x test
   artifacts:
     paths:
       - build/libs/Store-0.0.1-SNAPSHOT.jar
 
-# Сборка Docker-образа
 docker-build:
   stage: docker
   tags:
-    - docker
-  image: docker:latest
-  services:
-    - docker:dind
+    - shell
   script:
     - docker build -t $IMAGE_TAG .
   dependencies:
     - build
 
-# Деплой в Kubernetes через Helm
 deploy:
   stage: deploy
   tags:
-    - docker
-  image: docker:latest
-  services:
-    - docker:dind
+    - shell
   script:
-    - apk add --no-cache curl bash helm
     - helm upgrade --install store ./store-app \
       --namespace store \
       --create-namespace \
