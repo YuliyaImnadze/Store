@@ -38,7 +38,7 @@ deploy:
   script:
     - |
       helm upgrade --install store ./store-app \
-        --namespace store \
+        --namespace store-app \
         --create-namespace \
         --set image.repository=$CI_REGISTRY_IMAGE \
         --set image.tag=$CI_COMMIT_SHORT_SHA
