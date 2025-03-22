@@ -37,7 +37,7 @@ deploy:
     entrypoint: [""]
   script:
     - |
-      helm upgrade --install store ./store-app \
+      helm upgrade --install store-app ./store-app \
         --namespace store-app \
         --create-namespace \
         --set image.repository=$CI_REGISTRY_IMAGE \
