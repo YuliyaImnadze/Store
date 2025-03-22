@@ -2,6 +2,7 @@ stages:
   - build
   - docker
   - deploy
+  - destroy
 
 variables:
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
@@ -42,6 +43,28 @@ deploy:
         --create-namespace \
         --set image.repository=$CI_REGISTRY_IMAGE \
         --set image.tag=$CI_COMMIT_SHORT_SHA
+
+      # Проверка и создание ServiceMonitor, если его нет
+      if ! kubectl get servicemonitor store-app-monitor -n default &>/dev/null; then
+        echo "Creating ServiceMonitor..."
+        kubectl apply -f k8s/servicemonitor.yaml
+      else
+        echo "ServiceMonitor already exists. Skipping creation."
+      fi
+  only:
+    - master
+  when: manual
+
+
+destroy:
+  stage: destroy
+  tags:
+    - k8s
+  image:
+    name: lachlanevenson/k8s-kubectl:latest
+    entrypoint: [""]
+  script:
+    - kubectl delete namespace store-app
   only:
     - master
   when: manual
