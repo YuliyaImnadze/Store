@@ -4,31 +4,33 @@ stages:
   - deploy
 
 variables:
-  IMAGE_TAG: store-app:latest
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
 
 build:
   stage: build
-  tags:
-    - shell
+  image: gradle:8.4-jdk17
   script:
-    - docker run --rm -v "$PWD":/app -w /app gradle:8.4-jdk17 gradle clean build -x test
+    - gradle clean build -x test
   artifacts:
     paths:
       - build/libs/Store-0.0.1-SNAPSHOT.jar
 
 docker-build:
   stage: docker
-  tags:
-    - shell
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
     - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
   dependencies:
     - build
 
 deploy:
   stage: deploy
-  tags:
-    - shell
+  image: lachlanevenson/k8s-helm:latest
   script:
     - helm upgrade --install store ./store-app \
       --namespace store \
