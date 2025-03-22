@@ -19,7 +19,7 @@ build:
 docker-build:
   stage: docker
   tags:
-    - local
+    - docker
   script:
     - docker build -t $IMAGE_TAG .
   dependencies:
