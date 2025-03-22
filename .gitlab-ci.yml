@@ -30,16 +30,17 @@ docker-build:
 
 deploy:
   stage: deploy
+  tags:
+    - k8s
   image:
     name: lachlanevenson/k8s-helm:latest
     entrypoint: [""]
   script:
     - |
-      export KUBECONFIG=$KUBECONFIG_FILE
       helm upgrade --install store ./store-app \
         --namespace store \
         --create-namespace \
-        --set image.repository=store-app \
-        --set image.tag=latest
+        --set image.repository=$CI_REGISTRY_IMAGE \
+        --set image.tag=$CI_COMMIT_SHORT_SHA
   only:
     - master
