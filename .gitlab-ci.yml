@@ -11,7 +11,7 @@ build:
   tags:
     - shell
   script:
-    - gradle clean build -x test
+    - docker run --rm -v "$PWD":/app -w /app gradle:8.4-jdk17 gradle clean build -x test
   artifacts:
     paths:
       - build/libs/Store-0.0.1-SNAPSHOT.jar
