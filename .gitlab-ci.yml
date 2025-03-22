@@ -28,7 +28,7 @@ docker-build:
 deploy:
   stage: deploy
   tags:
-    - local
+    - docker
   script:
     - helm upgrade --install store ./store-app \
       --namespace store \
