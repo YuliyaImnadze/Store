@@ -1,18 +1,19 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: store-app-monitor
-  namespace: default
+  name: {{ include "store-app.fullname" . }}-monitor
   labels:
-    app: store-app
+    {{- include "store-app.labels" . | nindent 4 }}
     release: prometheus-operator
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/instance: store-app
-      app.kubernetes.io/name: store-app
+      {{- include "store-app.selectorLabels" . | nindent 6 }}
   endpoints:
     - interval: 15s
       path: /actuator/prometheus
       port: http
       scrapeTimeout: 10s
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}

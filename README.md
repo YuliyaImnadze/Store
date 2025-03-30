@@ -7,7 +7,7 @@ docker tag store-app:latest localhost:5000/store-app:latest
 #### Загрузить образ в Registry
 docker push localhost:5000/store-app:latest
 
-#### Запуск Registry
+#### Запуск Registry (проверить run)
 docker run -d -p 5000:5000 --name registry registry:2
 
 #### Добавить репозитории Helm для официальных чартов:
@@ -24,7 +24,7 @@ helm install my-redis bitnami/redis --set auth.enabled=false
 helm create store-app
 
 #### Развернуть приложение
-helm install store-app ./store-app
+helm install store-app ./store-app --namespace store-app --create-namespace
 
 #### Проверка шаблона
 helm lint ./store-app
@@ -53,4 +53,4 @@ kubectl get pods -n ingress-nginx
 #### Установить Prometheus Operator
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
-helm install prometheus-operator prometheus-community/kube-prometheus-stack --namespace default --set prometheus-node-exporter.enabled=false
+helm install prometheus-operator prometheus-community/kube-prometheus-stack --namespace monitoring --set prometheus-node-exporter.enabled=false
