@@ -43,6 +43,11 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable) //   http.csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
+                                .requestMatchers(
+                                        "/swagger-ui/**",
+                                        "/swagger-ui.html",
+                                        "/v3/api-docs/**"
+                                ).permitAll()
                                 .requestMatchers(HttpMethod.POST, "/store/user/create").permitAll() // регистрация пользователя
                                 .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/token").authenticated()
